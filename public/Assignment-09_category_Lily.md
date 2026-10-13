@@ -5,9 +5,9 @@
 - ##### **Layout Structure**
 
 1. **Navbar:** The home page will have a navbar, which will contain the Website name, Home, and My Profile (challenge requirements 1). Active routes will be implemented on the navbar.
-   1. If a user is logged in, the user's image will appear on the Navigation Bar, and when you hover over the image, the user's name will appear.
+   1. If a user is logged in, the user's name will appear on the Navigation Bar.
    2. If the user is not logged in, it will show a login button.
-   3. So, if a user is logged in, you will show the user's image and a logout button. If you click on the logout button, make sure you have logged out.
+   3. So, if a user is logged in, you will show the user's name and a logout button. If you click on the logout button, make sure you have logged out.
 
 2. **Main Section: The** Main Section will show different pages based on routes.
 3. **Footer:** A Footer with all relevant information and eye-catching design (Links to terms and conditions, privacy policy, and social media accounts.)
