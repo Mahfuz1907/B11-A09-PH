@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Components/Navbar/Navbar";
 import Footer from "@/Components/Footer/Footer";
+import SubscriptionProvider from "@/Context/SubscriptionContext";
 
 const pjs = Plus_Jakarta_Sans({
   weight: ['200', '300', '400', '500', '600', '700', '800'],
@@ -24,11 +25,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${pjs.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-pjs">
-        <Navbar />
+        <SubscriptionProvider>
+          <Navbar />
         <main className="grow">
           {children}
         </main>
         <Footer />
+        </SubscriptionProvider>
       </body>
     </html>
   );

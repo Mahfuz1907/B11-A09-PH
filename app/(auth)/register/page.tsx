@@ -1,18 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Package, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import { signUp } from "@/app/lib/auth-client";
+import { SubscriptionContext } from "@/Context/SubscriptionContext";
+import {Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const {password, setPassword} = useContext(SubscriptionContext)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget)
-    const userData = Object.fromEntries(formData)
+    const userData = Object.fromEntries(formData) as Record<string, string>
+
+    const { data, error } = await signUp.email({
+        name: userData.name,
+        email: userData.email,
+        password: userData.password
+    });
   };
+
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
@@ -73,89 +84,112 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            
-            {/* Name Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
+             <TextField
+              isRequired
+              name="name"
+              type="text"
+              validate={(value) => {
+                if (value.length < 3) {
+                  return "Name must be at least 3 characters";
+                }
+                return null;
+              }}
+            >
+              <Label className="block text-sm font-medium text-gray-700">Full Name</Label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <User className="w-5 h-5" />
                 </div>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="John Doe"
-                />
+                <Input 
+                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                placeholder="Your name" />
               </div>
-            </div>
-
-            {/* Email Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email Address</label>
+              <FieldError />
+             </TextField>
+             <TextField
+              isRequired
+              name="email"
+              type="email"
+              validate={(value) => {
+                if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value)) {
+                  return "Please enter a valid email address";
+                }
+                return null;
+              }}
+            >
+              <Label className="block text-sm font-medium text-gray-700">Email</Label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <Mail className="w-5 h-5" />
                 </div>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="you@example.com"
-                />
+                 <Input 
+                 className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                 placeholder="you@example.com" />
               </div>
+              <FieldError />
+             </TextField>
+             <TextField
+              isRequired
+              name="password"
+              type={showPassword ? "text" : "password"}
+              onChange={(val) => setPassword(val)}
+              validate={(value) => {
+                if (value.length < 6) {
+                  return "Password must be at least 8 characters";
+                }
+                return null;
+              }}
+            >
+            <Label className="block text-sm font-medium text-gray-700">Password</Label>
+             <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <Lock className="w-5 h-5" />
             </div>
-
-            {/* Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  required
-                  className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
+            <Input 
+            className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            placeholder="••••••" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
             </div>
-
-            {/* Confirm Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  name="confirm-password"
-                  required
-                  className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
+            <Description>Must be at least 6 characters</Description>
+            <FieldError />
+             </TextField>
+             <TextField
+              isRequired
+              name="confirm-password"
+              type={showConfirmPassword ? "text" : "password"}
+              validate={(value) => {
+                if (value !==password){
+                    return "Password doesn't match"
+                }
+                return null;
+                }}
+            >
+            <Label className="block text-sm font-medium text-gray-700">Confirm Password</Label>
+             <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <Lock className="w-5 h-5" />
             </div>
+            <Input 
+            className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            placeholder="••••••" />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+            </div>
+            <Description>Must be at least 6 characters</Description>
+            <FieldError />
+             </TextField>
 
             {/* Submit Button */}
             <div>
@@ -166,8 +200,7 @@ export default function RegisterPage() {
                 Register
               </button>
             </div>
-
-          </form>
+          </Form>
         </div>
       </div>
     </div>

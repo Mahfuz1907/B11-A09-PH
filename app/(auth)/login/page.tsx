@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Package, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { FieldError, Form, Input, Label, TextField } from "@heroui/react";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget)
-    const userData = Object.fromEntries(formData)
+    const userData = Object.fromEntries(formData) as Record<string, string>
   };
 
   return (
@@ -72,48 +73,46 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            
-            {/* Email Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email Address</label>
+          <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
+             <TextField
+              isRequired
+              name="email"
+              type="email"
+            >
+              <Label className="block text-sm font-medium text-gray-700">Email</Label>
               <div className="mt-1 relative rounded-md shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
                   <Mail className="w-5 h-5" />
                 </div>
-                <input
-                  type="email"
-                  name='email'
-                  required
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="you@example.com"
-                />
+                 <Input 
+                 className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                 placeholder="you@example.com" />
               </div>
+              <FieldError />
+             </TextField>
+             <TextField
+              isRequired
+              name="password"
+              type={showPassword ? "text" : "password"}
+            >
+            <Label className="block text-sm font-medium text-gray-700">Password</Label>
+             <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+              <Lock className="w-5 h-5" />
             </div>
-
-            {/* Password Field */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  required
-                  className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
-              </div>
+            <Input 
+            className="block w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+            placeholder="••••••" />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
             </div>
+            <FieldError />
+             </TextField>
 
             {/* Submit Button */}
             <div>
@@ -121,11 +120,10 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-md text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
               >
-                Sign In
+                Login
               </button>
             </div>
-
-          </form>
+          </Form>
         </div>
       </div>
     </div>
