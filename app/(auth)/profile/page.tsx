@@ -10,11 +10,12 @@ import {
   Form,
   Input,
   Label,
+  Spinner,
   TextField,
 } from "@heroui/react";
 
 export default function ProfilePage() {
-  const {data:session} = useSession()
+  const {data:session, isPending} = useSession()
   const user = session?.user
 
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +43,15 @@ export default function ProfilePage() {
         })
     }
   };
+
+  if(isPending){
+    return (
+      <div className="flex flex-col my-20 items-center gap-2">
+        <Spinner size="md" />
+        <span className="text-xs text-muted">Medium</span>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">

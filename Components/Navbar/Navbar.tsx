@@ -5,16 +5,21 @@ import { useState } from "react";
 import AuthButtons from "./AuthButtons";
 import MobileAuthButton from "./MobileAuthButton";
 import { useSession } from "@/app/lib/auth-client";
-import { UserType } from "@/type";
-
-interface Types{
-  user: UserType
-}
+import { Spinner } from "@heroui/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const {data:session} = useSession()
+  const {data:session, isPending} = useSession()
   const user = session?.user
+
+  if(isPending){
+    return (
+      <div className="flex flex-col my-4 items-center gap-2">
+        <Spinner size="md" />
+        <span className="text-xs text-muted">Medium</span>
+      </div>
+    )
+  }
 
   return (
     <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 font-sans shadow-xs">

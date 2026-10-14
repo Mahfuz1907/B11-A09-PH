@@ -43,7 +43,3 @@
 3. **Dynamic Title:** You need to implement a dynamic title for each page.
 
 4. Once a user is logged in, user information will show on the navbar even if he/she reload the website, this info will not disappear. You can show a loader when the logged-in user's info is in a loading state. You can implement this using Firebase's onAuthStateChange method.
-
-### **Challenges**
-
-1. **My Profile:** Create a protected route where, after logging in, users can see their information like name, email and there will be a form with 1 input for name. Users can edit the name and save the changes.

@@ -4,20 +4,27 @@ import React, { createContext, Dispatch, ReactNode, SetStateAction, useState } f
 
 interface ContextTypes{
     password: string,
-    setPassword: Dispatch<SetStateAction<string>>
+    setPassword: Dispatch<SetStateAction<string>>,
+    resPass: string,
+    setResPass: Dispatch<SetStateAction<string>>
 }
 
 export const SubscriptionContext = createContext<ContextTypes>({
     password: '',
-    setPassword: () => {}
+    setPassword: () => {},
+    resPass: '',
+    setResPass: () => {}
 })
 
 const SubscriptionProvider = ({children}:{children:ReactNode}) => {
     const [password, setPassword] = useState<string>('')
+    const [resPass, setResPass] = useState<string>('')
 
     const sharedData = {
         password,
-        setPassword
+        setPassword,
+        resPass,
+        setResPass
     }
 
     return (
