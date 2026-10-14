@@ -27,6 +27,12 @@ const MobileAuthButton = ({setIsOpen, user}:MobAuthType) => {
           {
             user?.name ? 
             <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
+            <Link
+              href={'/profile'} 
+              className='text-indigo-600 font-medium text-lg text-center'
+              >
+                {user?.name}
+            </Link>
             <Button
               className="block text-center px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm shadow-sm w-full"
               onClick={() => {setIsOpen(false); signOut({

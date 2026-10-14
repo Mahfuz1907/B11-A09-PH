@@ -19,6 +19,12 @@ const AuthButtons = ({user}:AuthButtonsType) => {
           {
             user?.name ? 
             <>
+              <Link
+              href={'/profile'} 
+              className='text-indigo-600 font-medium text-lg'
+              >
+                {user?.name}
+              </Link>
               <Button
               onClick={() => signOut({
                 fetchOptions: {
