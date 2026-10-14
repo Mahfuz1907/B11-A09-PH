@@ -4,14 +4,41 @@ import Link from "next/link";
 import { useState } from "react";
 import { Package, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { FieldError, Form, Input, Label, TextField } from "@heroui/react";
+import { signIn } from "@/app/lib/auth-client";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter()
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget)
     const userData = Object.fromEntries(formData) as Record<string, string>
+
+    const { data, error } = await signIn.email({
+    email: userData.email, 
+    password: userData.password, 
+    rememberMe: true,
+    });
+
+    if(data){
+      Swal.fire({
+       title: "Success!",
+       text: "Logged in successfully.",
+       icon: "success",
+       confirmButtonColor: "#4f46e5", 
+     });
+      router.push('/')
+    }else if(error){
+      Swal.fire({
+        title: 'Error!',
+        text: 'There is an error in logging in.',
+        icon: 'error',
+        confirmButtonColor: "#4f46e5"
+      })
+    }
   };
 
   return (
@@ -113,6 +140,15 @@ export default function LoginPage() {
             </div>
             <FieldError />
              </TextField>
+
+             {/* Forgot Password Link */}
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <Link href="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+                  Forgot your password?
+                </Link>
+              </div>
+            </div>
 
             {/* Submit Button */}
             <div>

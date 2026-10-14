@@ -3,9 +3,18 @@
 import Link from "next/link";
 import { useState } from "react";
 import AuthButtons from "./AuthButtons";
+import MobileAuthButton from "./MobileAuthButton";
+import { useSession } from "@/app/lib/auth-client";
+import { UserType } from "@/type";
+
+interface Types{
+  user: UserType
+}
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {data:session} = useSession()
+  const user = session?.user
 
   return (
     <nav className="w-full bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 font-sans shadow-xs">
@@ -33,7 +42,7 @@ export default function Navbar() {
           </div>
 
           {/* Auth Buttons (Right) */}
-          <AuthButtons />
+          <AuthButtons user={user} />
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
@@ -56,31 +65,7 @@ export default function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-4 space-y-2">
-          <Link 
-            href="/" 
-            className="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
-            onClick={() => setIsOpen(false)}
-          >
-            Home
-          </Link>
-          <div className="pt-2 border-t border-gray-100 flex flex-col space-y-2">
-            <Link 
-              href="/login"
-              className="block text-center px-4 py-2 rounded-xl text-gray-700 border border-gray-200 font-medium text-sm"
-              onClick={() => setIsOpen(false)}
-            >
-              Login
-            </Link>
-            <Link 
-              href="/register"
-              className="block text-center px-4 py-2 rounded-xl bg-indigo-600 text-white font-medium text-sm shadow-sm"
-              onClick={() => setIsOpen(false)}
-            >
-              Register
-            </Link>
-          </div>
-        </div>
+        <MobileAuthButton setIsOpen={setIsOpen} user={user} />
       )}
     </nav>
   );

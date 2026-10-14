@@ -1,27 +1,48 @@
 "use client";
 
+import Swal from 'sweetalert2'
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { Package, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { signUp } from "@/app/lib/auth-client";
 import { SubscriptionContext } from "@/Context/SubscriptionContext";
 import {Description, FieldError, Form, Input, Label, TextField} from "@heroui/react";
+import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const {password, setPassword} = useContext(SubscriptionContext)
+  const router = useRouter()
 
   const onSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget)
     const userData = Object.fromEntries(formData) as Record<string, string>
 
+
     const { data, error } = await signUp.email({
         name: userData.name,
         email: userData.email,
         password: userData.password
     });
+
+    if(data){
+      Swal.fire({
+        title: "Success!",
+        text: "Your account has been created successfully.",
+        icon: "success",
+        confirmButtonColor: "#4f46e5", 
+      });
+      router.push('/')
+    }else if(error){
+      Swal.fire({
+        title: "Error!",
+        text: "Your account is not created.",
+        icon: 'error',
+        confirmButtonColor: '#4f46e5'
+      })
+    }
   };
 
 
@@ -135,7 +156,7 @@ export default function RegisterPage() {
               type={showPassword ? "text" : "password"}
               onChange={(val) => setPassword(val)}
               validate={(value) => {
-                if (value.length < 6) {
+                if (value.length < 8) {
                   return "Password must be at least 8 characters";
                 }
                 return null;
